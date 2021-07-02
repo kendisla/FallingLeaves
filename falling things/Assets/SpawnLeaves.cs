@@ -1,0 +1,77 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SpawnLeaves : MonoBehaviour
+{
+    GameController gc;
+    SpriteRenderer sr;
+
+    public GameObject leafPrefab;
+
+    public int droppedLeaves = 0;
+
+    Sprite[] ls = new Sprite[3];
+
+
+    float[] range;
+
+    PlayerController pc;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        pc = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        gc = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+        sr = GetComponent<SpriteRenderer>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    public IEnumerator Spawn()
+    {
+        float wait = Random.Range(range[0], range[1]);
+        int leaf = Random.Range(0,2);
+        yield return new WaitForSeconds(wait);
+        GameObject l = Instantiate(leafPrefab, new Vector3(Random.Range(-1.95f, 1.95f), 0.6f), Quaternion.identity);
+        l.GetComponent<SpriteRenderer>().sprite = ls[leaf];
+        if (Time.deltaTime % 2 == 0)
+        {
+            l.GetComponent<SpriteRenderer>().sortingOrder = 2;
+        }
+        else
+        {
+            l.GetComponent<SpriteRenderer>().sortingOrder = 4;
+        }
+
+        Destroy(l, 5f);
+        if (!pc.dead)
+        {
+            droppedLeaves++;
+            StartCoroutine(Spawn());
+        }
+    }
+
+    public void UpdateSeason(Sprite newTree, Sprite nl1, Sprite nl2, Sprite nl3, float[] newRange)
+    {
+        sr.sprite = newTree;
+        ls[0] = nl1;
+        ls[1] = nl2;
+        ls[2] = nl3;
+        range = newRange;
+        GameObject[] oldleaves =GameObject.FindGameObjectsWithTag("enemy");
+        foreach (GameObject l in oldleaves)
+        {
+            Destroy(l);
+        }
+    }
+
+    public void Reset()
+    {
+        droppedLeaves = 0;
+    }
+}
