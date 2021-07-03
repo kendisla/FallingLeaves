@@ -36,7 +36,6 @@ public class SpawnLeaves : MonoBehaviour
     {
         float wait = Random.Range(range[0], range[1]);
         int leaf = Random.Range(0,2);
-        Debug.Log(gameObject.name + " waiting for " + wait + " seconds before spawning");
         yield return new WaitForSeconds(wait);
         GameObject l = Instantiate(leafPrefab, new Vector3(Random.Range(-1.95f, 1.95f), 0.6f), Quaternion.identity);
         l.GetComponent<SpriteRenderer>().sprite = ls[leaf];

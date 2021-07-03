@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public Sprite right;
     public Sprite jump;
     public Sprite land;
-
+    public AudioSource die;
     public bool dead = true;
     public float speed = 5f;
     public float jumpForce = 7f;
@@ -33,11 +33,11 @@ public class PlayerController : MonoBehaviour
     {
         if (!dead)
         {
-            if (Input.GetKeyUp(KeyCode.UpArrow))
+            if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.Space))
             {
                 jumping = false;
             }
-            if (Input.GetKey(KeyCode.UpArrow))
+            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.Space))
             {
                 if (!jumping)
                 {
@@ -60,12 +60,12 @@ public class PlayerController : MonoBehaviour
             }
 
 
-            if (Input.GetKey(KeyCode.LeftArrow))
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
                 sr.flipX = false;
                 rb.AddForce(Vector2.left * speed);
             }
-            else if (Input.GetKey(KeyCode.RightArrow))
+            else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
                 sr.flipX = true;
                 rb.AddForce(Vector2.right * speed);
@@ -96,6 +96,10 @@ public class PlayerController : MonoBehaviour
     }
     public void Die() 
     {
+        if (!dead)
+        {
+            die.Play();
+        }
         dead = true;
         GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().EndGame();
     }
